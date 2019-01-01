@@ -1,1 +1,9 @@
 # Created by .ignore support plugin (hsz.mobi)
+/uwsgi.sock
+将删除 .idea/workspace.xml
+将删除 UWSGI.log
+将删除 myapp/__pycache__/
+将删除 myapp/migrations/__pycache__/
+将删除 pid.uwsgi
+将删除 scripts/
+将删除 vue_django_test/__pycache__/
