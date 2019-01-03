@@ -39,6 +39,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'DjangoUeditor',
     'rest_framework',
     'xadmin',
     'crispy_forms',
