@@ -17,8 +17,12 @@ from django.contrib import admin
 from django.urls import path, include
 from django.views.generic import TemplateView
 import xadmin
+from rest_framework.routers import DefaultRouter
+
+
 import myapp.urls
 
+router = DefaultRouter()
 
 urlpatterns = [
     # path('admin/', admin.site.urls),
