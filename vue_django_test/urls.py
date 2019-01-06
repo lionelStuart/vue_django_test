@@ -19,14 +19,19 @@ from django.views.generic import TemplateView
 import xadmin
 from rest_framework.routers import DefaultRouter
 
-
+import DjangoUeditor
 import myapp.urls
+from goods.views import GoodsListViewSet
 
 router = DefaultRouter()
+
+router.register('goods', GoodsListViewSet, base_name='goods')
 
 urlpatterns = [
     # path('admin/', admin.site.urls),
     path('admin/', xadmin.site.urls),
+    path('ueditor/', include('DjangoUeditor.urls')),
     path('api/', include(myapp.urls)),
-    path('', TemplateView.as_view(template_name='index.html')),
+    path('', TemplateView.as_view(template_name='index.html'), name='index'),
+
 ]

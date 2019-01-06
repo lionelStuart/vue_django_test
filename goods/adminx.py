@@ -1,6 +1,6 @@
 import xadmin
 
-from goods.models import GoodCategory, Goods
+from goods.models import GoodCategory, Goods, GoodCategoryBrand, Banner
 
 
 class GoodsAdmin(object):
@@ -22,9 +22,25 @@ class GoodCategoryAdmin(object):
     search_fields = ['name', ]
 
 
-class GoodCategoryBrandAdmin(object):
-    pass
+class GoodBrandAdmin(object):
+    list_display = ["category", "image", "name", "desc"]
+
+    """
+    do what?
+    """
+
+    def get_context(self):
+        context = super(GoodBrandAdmin, self).get_context()
+        if 'form' in context:
+            context['form'].fields['category'].queryset = GoodCategory.objects.filter(category_type=1)
+        return context
 
 
+class BannerAdmin(object):
+    list_display = ["goods", "image", "index"]
+
+
+xadmin.site.register(Banner, BannerAdmin)
+xadmin.site.register(GoodCategoryBrand, GoodBrandAdmin)
 xadmin.site.register(GoodCategory, GoodCategoryAdmin)
 xadmin.site.register(Goods, GoodsAdmin)

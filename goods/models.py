@@ -2,7 +2,6 @@ from datetime import datetime
 
 from django.db import models
 
-
 # Create your models here.
 from DjangoUeditor.models import UEditorField
 
@@ -34,7 +33,20 @@ class GoodCategory(models.Model):
 
 
 class GoodCategoryBrand(models.Model):
-    pass
+    category = models.ForeignKey(GoodCategory, related_name='brands', null=True, blank=True, on_delete=models.CASCADE,
+                                 verbose_name="商品类目")
+    name = models.CharField(default="", max_length=30, verbose_name="品牌名", help_text="品牌名")
+    desc = models.TextField(default="", max_length=200, verbose_name="品牌描述", help_text="品牌描述")
+    image = models.ImageField(null=True, max_length=200, upload_to="brands/")
+    add_time = models.DateTimeField(default=datetime.now, verbose_name="添加时间")
+
+    class Meta:
+        verbose_name = "品牌"
+        verbose_name_plural = verbose_name
+        db_table = "goods_goodsbrand"
+
+    def __str__(self):
+        return self.name
 
 
 class Goods(models.Model):
@@ -62,3 +74,36 @@ class Goods(models.Model):
 
     def __str__(self):
         return self.name
+
+
+class GoodImage(models.Model):
+    """
+    商品轮播图
+    """
+    goods = models.ForeignKey(Goods, verbose_name="商品", related_name="images", on_delete=models.CASCADE)
+    image = models.ImageField(upload_to="", verbose_name="图片", null=True, blank=True)
+    add_time = models.DateTimeField(default=datetime.now, verbose_name="添加时间")
+
+    class Meta:
+        verbose_name = '商品图片'
+        verbose_name_plural = verbose_name
+
+    def __str__(self):
+        return self.goods.name
+
+
+class Banner(models.Model):
+    """
+    轮播的商品
+    """
+    goods = models.ForeignKey(Goods, verbose_name="商品", on_delete=models.CASCADE)
+    image = models.ImageField(upload_to='banner', verbose_name="轮播图片")
+    index = models.IntegerField(default=0, verbose_name="轮播顺序")
+    add_time = models.DateTimeField(default=datetime.now, verbose_name="添加时间")
+
+    class Meta:
+        verbose_name = '轮播商品'
+        verbose_name_plural = verbose_name
+
+    def __str__(self):
+        return self.goods.name
