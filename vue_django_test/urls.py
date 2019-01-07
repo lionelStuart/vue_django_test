@@ -23,12 +23,21 @@ from rest_framework.routers import DefaultRouter
 
 import DjangoUeditor
 import myapp.urls
-from goods.views import GoodsListViewSet
+from goods.views import GoodsListViewSet, BannerViewset, CategoryViewset
 from vue_django_test.settings import MEDIA_ROOT
 
 router = DefaultRouter()
 
 router.register('goods', GoodsListViewSet, base_name='goods')
+
+# 轮播图url
+router.register(r'banners', BannerViewset, base_name="banners")
+# 配置category的url
+router.register(r'categorys', CategoryViewset, base_name="categorys")
+
+goods_list = GoodsListViewSet.as_view({
+    'get': 'list',
+})
 
 urlpatterns = [
     # path('admin/', admin.site.urls),
