@@ -18,7 +18,7 @@ class GoodsPagination(PageNumberPagination):
 
 class GoodsListViewSet(mixins.ListModelMixin, mixins.RetrieveModelMixin, viewsets.GenericViewSet):
     """
-    商品列表页, 分页， 搜索， 过滤， 排序
+    商品列表页, 分页， 搜索， 过滤， 排序..
     """
     # throttle_classes = (UserRateThrottle, )
     queryset = Goods.objects.all()

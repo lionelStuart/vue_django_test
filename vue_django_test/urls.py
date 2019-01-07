@@ -14,14 +14,17 @@ Including another URLconf
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
 from django.contrib import admin
-from django.urls import path, include
+from django.urls import path, include, re_path
 from django.views.generic import TemplateView
+from django.views.static import serve
+
 import xadmin
 from rest_framework.routers import DefaultRouter
 
 import DjangoUeditor
 import myapp.urls
 from goods.views import GoodsListViewSet
+from vue_django_test.settings import MEDIA_ROOT
 
 router = DefaultRouter()
 
@@ -31,7 +34,9 @@ urlpatterns = [
     # path('admin/', admin.site.urls),
     path('admin/', xadmin.site.urls),
     path('ueditor/', include('DjangoUeditor.urls')),
-    path('api/', include(myapp.urls)),
+    # path('api/', include(myapp.urls)),
     path('', TemplateView.as_view(template_name='index.html'), name='index'),
-
+    path('api/', include(router.urls)),
+    ###处理url 显示路径
+    re_path('media/(?P<path>.*)', serve, {"document_root": MEDIA_ROOT}),
 ]
