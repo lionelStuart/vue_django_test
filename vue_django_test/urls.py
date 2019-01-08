@@ -23,7 +23,7 @@ from rest_framework.routers import DefaultRouter
 
 import DjangoUeditor
 import myapp.urls
-from goods.views import GoodsListViewSet, BannerViewset, CategoryViewset
+from goods.views import GoodsListViewSet, BannerViewset, CategoryViewset, IndexCategoryViewset
 from vue_django_test.settings import MEDIA_ROOT
 
 router = DefaultRouter()
@@ -34,6 +34,8 @@ router.register('goods', GoodsListViewSet, base_name='goods')
 router.register(r'banners', BannerViewset, base_name="banners")
 # 配置category的url
 router.register(r'categorys', CategoryViewset, base_name="categorys")
+
+router.register(r'indexgoods', IndexCategoryViewset, base_name="indexgoods")
 
 goods_list = GoodsListViewSet.as_view({
     'get': 'list',

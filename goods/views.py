@@ -1,11 +1,15 @@
 from django.shortcuts import render
 
 # Create your views here.
+from django_filters.rest_framework import DjangoFilterBackend
+from rest_framework import filters
+
 from rest_framework import mixins, viewsets
 from rest_framework.pagination import PageNumberPagination
 from rest_framework.response import Response
 
-from .serializers import GoodsSerializer, CategorySerializer, BannerSerializer
+from .filters import GoodsFilter
+from .serializers import GoodsSerializer, CategorySerializer, BannerSerializer, IndexCategorySerializer
 from .models import Goods, GoodCategory, Banner
 
 
@@ -25,8 +29,8 @@ class GoodsListViewSet(mixins.ListModelMixin, mixins.RetrieveModelMixin, viewset
     serializer_class = GoodsSerializer
     pagination_class = GoodsPagination
     # authentication_classes = (TokenAuthentication, )
-    # filter_backends = (DjangoFilterBackend, filters.SearchFilter, filters.OrderingFilter)
-    # filter_class = GoodsFilter
+    filter_backends = (DjangoFilterBackend, filters.SearchFilter, filters.OrderingFilter)
+    filter_class = GoodsFilter
     search_fields = ('name', 'goods_brief', 'goods_desc')
     ordering_fields = ('sold_num', 'shop_price')
 
@@ -55,3 +59,11 @@ class BannerViewset(mixins.ListModelMixin, viewsets.GenericViewSet):
     """
     queryset = Banner.objects.all().order_by("index")
     serializer_class = BannerSerializer
+
+
+class IndexCategoryViewset(mixins.ListModelMixin, viewsets.GenericViewSet):
+    """
+    首页商品分类数据
+    """
+    queryset = GoodCategory.objects.filter(is_tab=True, name__in=["生鲜食品", "酒水饮料"])
+    serializer_class = IndexCategorySerializer
