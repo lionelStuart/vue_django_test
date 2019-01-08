@@ -44,8 +44,8 @@ urlpatterns = [
     path('admin/', xadmin.site.urls),
     path('ueditor/', include('DjangoUeditor.urls')),
     # path('api/', include(myapp.urls)),
-    path('', TemplateView.as_view(template_name='index.html'), name='index'),
-    path('api/', include(router.urls)),
+    path('index/', TemplateView.as_view(template_name='index.html'), name='index'),
+    path('', include(router.urls)),
     ###处理url 显示路径
     re_path('media/(?P<path>.*)', serve, {"document_root": MEDIA_ROOT}),
 ]

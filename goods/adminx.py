@@ -1,6 +1,6 @@
 import xadmin
 
-from goods.models import GoodCategory, Goods, GoodCategoryBrand, Banner
+from .models import GoodCategory, Goods, GoodCategoryBrand, Banner, GoodImage, IndexAd, HotSearchWords
 
 
 class GoodsAdmin(object):
@@ -13,7 +13,17 @@ class GoodsAdmin(object):
     style_fields = {"goods_desc": "ueditor"}
 
     # inline??
-    # inlines = [GoodsImagesInline]
+
+    class GoodsImagesInline(object):
+        model = GoodImage
+        exclude = ["add_time"]
+        extra = 1
+        style = 'tab'
+
+    """
+    内联类
+    """
+    inlines = [GoodsImagesInline]
 
 
 class GoodCategoryAdmin(object):
@@ -40,7 +50,19 @@ class BannerAdmin(object):
     list_display = ["goods", "image", "index"]
 
 
+class IndexAdAdmin(object):
+    list_display = ["category", "goods"]
+
+
+class HotSearchAdmin(object):
+    list_display = ["keywords", "index", "add_time"]
+
+
 xadmin.site.register(Banner, BannerAdmin)
 xadmin.site.register(GoodCategoryBrand, GoodBrandAdmin)
 xadmin.site.register(GoodCategory, GoodCategoryAdmin)
 xadmin.site.register(Goods, GoodsAdmin)
+
+xadmin.site.register(IndexAd, IndexAdAdmin)
+xadmin.site.register(HotSearchWords, HotSearchAdmin)
+
