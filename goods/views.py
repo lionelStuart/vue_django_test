@@ -9,8 +9,9 @@ from rest_framework.pagination import PageNumberPagination
 from rest_framework.response import Response
 
 from .filters import GoodsFilter
-from .serializers import GoodsSerializer, CategorySerializer, BannerSerializer, IndexCategorySerializer
-from .models import Goods, GoodCategory, Banner
+from .serializers import GoodsSerializer, CategorySerializer, BannerSerializer, IndexCategorySerializer, \
+    HotWordsSerializer
+from .models import Goods, GoodCategory, Banner, HotSearchWords
 
 
 class GoodsPagination(PageNumberPagination):
@@ -59,6 +60,22 @@ class BannerViewset(mixins.ListModelMixin, viewsets.GenericViewSet):
     """
     queryset = Banner.objects.all().order_by("index")
     serializer_class = BannerSerializer
+
+
+class IndexCategoryViewset(mixins.ListModelMixin, viewsets.GenericViewSet):
+    """
+    首页商品分类数据
+    """
+    queryset = GoodCategory.objects.filter(is_tab=True, name__in=["生鲜食品", "酒水饮料"])
+    serializer_class = IndexCategorySerializer
+
+
+class HotSearchsViewset(mixins.ListModelMixin, viewsets.GenericViewSet):
+    """
+    获取热搜词列表
+    """
+    queryset = HotSearchWords.objects.all().order_by("-index")
+    serializer_class = HotWordsSerializer
 
 
 class IndexCategoryViewset(mixins.ListModelMixin, viewsets.GenericViewSet):

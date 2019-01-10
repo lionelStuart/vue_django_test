@@ -23,7 +23,7 @@ from rest_framework.routers import DefaultRouter
 
 import DjangoUeditor
 import myapp.urls
-from goods.views import GoodsListViewSet, BannerViewset, CategoryViewset, IndexCategoryViewset
+from goods.views import GoodsListViewSet, BannerViewset, CategoryViewset, IndexCategoryViewset, HotSearchsViewset
 from vue_django_test.settings import MEDIA_ROOT
 
 router = DefaultRouter()
@@ -37,9 +37,18 @@ router.register(r'categorys', CategoryViewset, base_name="categorys")
 
 router.register(r'indexgoods', IndexCategoryViewset, base_name="indexgoods")
 
+router.register(r'hotsearchs', HotSearchsViewset, base_name="hotsearchs")
+
+# 首页商品系列数据
+router.register(r'indexgoods', IndexCategoryViewset, base_name="indexgoods")
+
 goods_list = GoodsListViewSet.as_view({
     'get': 'list',
 })
+
+router.register(r'users', UserViewset, base_name="users")
+
+
 
 urlpatterns = [
     # path('admin/', admin.site.urls),

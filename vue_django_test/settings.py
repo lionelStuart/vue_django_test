@@ -47,6 +47,7 @@ INSTALLED_APPS = [
     'corsheaders',
     'myapp',
     'goods',
+    'users',
 
 ]
 
@@ -117,6 +118,12 @@ AUTH_PASSWORD_VALIDATORS = [
 
 # Internationalization
 # https://docs.djangoproject.com/en/2.1/topics/i18n/
+
+AUTH_USER_MODEL = 'users.UserProfile'
+
+#手机号码正则表达式
+REGEX_MOBILE = "^1[358]\d{9}$|^147\d{8}$|^176\d{8}$"
+
 
 # LANGUAGE_CODE = 'en-us'
 LANGUAGE_CODE = 'zh-Hans'
