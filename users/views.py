@@ -31,7 +31,7 @@ class CustomBackend(ModelBackend):
             if user.check_password(password):
                 return user
         except Exception as e:
-            print("CustomBack e:{}".format(e.message))
+            print("CustomBack e:{}".format(e))
             traceback.print_exc()
             return None
 
@@ -98,7 +98,7 @@ class UserViewset(CreateModelMixin, mixins.UpdateModelMixin, mixins.RetrieveMode
     /code ->/users
     5.添加中间件-验证环节 CustomBackend(ModelBackend):
     setting: AUTHENTICATION_BACKENDS
-    6.添加短信发送服务 
+    6.添加短信发送服务 需要注册api 服务 写入key 匹配的topic
     
     """
     authentication_classes = (JSONWebTokenAuthentication, authentication.SessionAuthentication)

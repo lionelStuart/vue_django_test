@@ -42,6 +42,7 @@ INSTALLED_APPS = [
     'DjangoUeditor',
     'rest_framework',
     'rest_framework.authtoken',
+    'rest_framework_swagger',
     'xadmin',
     'crispy_forms',
     'django_filters',
