@@ -17,11 +17,8 @@ class YunPian(object):
             "text": "【慕学生鲜】您的验证码是{code}。如非本人操作，请忽略本短信".format(code=code)
         }
 
-        print("sms request {}".format(parmas))
         response = requests.post(self.single_send_url, data=parmas)
         re_dict = json.loads(response.text)
-
-        print("reutrn yunpian resp:{}".format(re_dict))
         return re_dict
 
 
