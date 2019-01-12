@@ -17,6 +17,7 @@ from django.contrib import admin
 from django.urls import path, include, re_path
 from django.views.generic import TemplateView
 from django.views.static import serve
+from rest_framework_jwt.views import obtain_jwt_token
 
 import xadmin
 from rest_framework.routers import DefaultRouter
@@ -24,6 +25,7 @@ from rest_framework.routers import DefaultRouter
 import DjangoUeditor
 import myapp.urls
 from goods.views import GoodsListViewSet, BannerViewset, CategoryViewset, IndexCategoryViewset, HotSearchsViewset
+from users.views import UserViewset, SmsCodeViewset
 from vue_django_test.settings import MEDIA_ROOT
 
 router = DefaultRouter()
@@ -46,16 +48,20 @@ goods_list = GoodsListViewSet.as_view({
     'get': 'list',
 })
 
+## 用户 & 注册
 router.register(r'users', UserViewset, base_name="users")
 
-
+router.register(r'code', SmsCodeViewset, base_name="codes")
 
 urlpatterns = [
     # path('admin/', admin.site.urls),
     path('admin/', xadmin.site.urls),
     path('ueditor/', include('DjangoUeditor.urls')),
+    path('api-auth/', include('rest_framework.urls', namespace='rest_framework')),
     # path('api/', include(myapp.urls)),
+
     path('index/', TemplateView.as_view(template_name='index.html'), name='index'),
+    path('login/', obtain_jwt_token),
     path('', include(router.urls)),
     ###处理url 显示路径
     re_path('media/(?P<path>.*)', serve, {"document_root": MEDIA_ROOT}),
