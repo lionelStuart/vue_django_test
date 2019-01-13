@@ -51,6 +51,7 @@ INSTALLED_APPS = [
     'goods',
     'users',
     'user_operation',
+    'trade',
 
 ]
 
@@ -76,7 +77,7 @@ REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': (
         'rest_framework.authentication.BasicAuthentication',
         'rest_framework.authentication.SessionAuthentication',
-       # 'rest_framework_jwt.authentication.JSONWebTokenAuthentication',
+        # 'rest_framework_jwt.authentication.JSONWebTokenAuthentication',
     ),
     # 'DEFAULT_THROTTLE_CLASSES': (
     #     'rest_framework.throttling.AnonRateThrottle',
@@ -142,17 +143,15 @@ AUTHENTICATION_BACKENDS = (
     'users.views.CustomBackend',
 )
 
-
 AUTH_USER_MODEL = 'users.UserProfile'
 
 # 手机号码正则表达式
 REGEX_MOBILE = "^1[358]\d{9}$|^147\d{8}$|^176\d{8}$"
 
-#def yunpian api key
+# def yunpian api key
 ## 等权限开通 fuck shit
 
-APIKEY='ab6ac0af70f1e52eec138ca9db0c4549'
-
+APIKEY = 'ab6ac0af70f1e52eec138ca9db0c4549'
 
 # LANGUAGE_CODE = 'en-us'
 LANGUAGE_CODE = 'zh-Hans'
@@ -177,3 +176,7 @@ MEDIA_ROOT = os.path.join(BASE_DIR, 'media/')
 STATICFILES_DIRS = [os.path.join(BASE_DIR, 'app/dist/static'),
                     os.path.join(BASE_DIR, 'app/dist'),
                     ]
+
+# 支付宝相关配置
+private_key_path = os.path.join(BASE_DIR, 'trade/keys/private_2048.txt')
+ali_pub_key_path = os.path.join(BASE_DIR, 'trade/keys/alipay_key_2048.txt')

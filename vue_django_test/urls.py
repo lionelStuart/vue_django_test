@@ -26,6 +26,7 @@ from rest_framework.routers import DefaultRouter
 import DjangoUeditor
 import myapp.urls
 from goods.views import GoodsListViewSet, BannerViewset, CategoryViewset, IndexCategoryViewset, HotSearchsViewset
+from trade.views import ShoppingCartViewset, OrderViewset, AliPayView
 from user_operation.views import UserFavViewset, LeavingMessageViewset, AddressViewset
 from users.views import UserViewset, SmsCodeViewset
 from vue_django_test.settings import MEDIA_ROOT
@@ -61,6 +62,10 @@ router.register(r'userfavs', UserFavViewset, base_name='userfavs')
 router.register(r'messages', LeavingMessageViewset, base_name='messages')
 router.register('address', AddressViewset, base_name='address')
 
+## 购物车 订单
+router.register(r'shopcarts', ShoppingCartViewset, base_name='shopcarts')
+router.register(r'orders', OrderViewset, base_name='orders')
+
 urlpatterns = [
     # path('admin/', admin.site.urls),
     path('admin/', xadmin.site.urls),
@@ -77,4 +82,6 @@ urlpatterns = [
     path('', include(router.urls)),
     ###处理url 显示路径
     re_path('media/(?P<path>.*)', serve, {"document_root": MEDIA_ROOT}),
+
+    path('alipay/return/', AliPayView.as_view(), name="alipay"),
 ]
