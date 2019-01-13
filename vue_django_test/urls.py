@@ -26,6 +26,7 @@ from rest_framework.routers import DefaultRouter
 import DjangoUeditor
 import myapp.urls
 from goods.views import GoodsListViewSet, BannerViewset, CategoryViewset, IndexCategoryViewset, HotSearchsViewset
+from user_operation.views import UserFavViewset, LeavingMessageViewset, AddressViewset
 from users.views import UserViewset, SmsCodeViewset
 from vue_django_test.settings import MEDIA_ROOT
 
@@ -53,6 +54,12 @@ goods_list = GoodsListViewSet.as_view({
 router.register(r'users', UserViewset, base_name="users")
 
 router.register(r'code', SmsCodeViewset, base_name="codes")
+
+## 用户动作 收藏 留言 收货
+
+router.register(r'userfavs', UserFavViewset, base_name='userfavs')
+router.register(r'messages', LeavingMessageViewset, base_name='messages')
+router.register('address', AddressViewset, base_name='address')
 
 urlpatterns = [
     # path('admin/', admin.site.urls),
