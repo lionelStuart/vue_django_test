@@ -180,3 +180,6 @@ STATICFILES_DIRS = [os.path.join(BASE_DIR, 'app/dist/static'),
 # 支付宝相关配置
 private_key_path = os.path.join(BASE_DIR, 'trade/keys/private_2048.txt')
 ali_pub_key_path = os.path.join(BASE_DIR, 'trade/keys/alipay_key_2048.txt')
+
+#APP_ID = '2016092300581122'
+APP_ID = '2016091500517456'

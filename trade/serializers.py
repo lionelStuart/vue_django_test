@@ -6,7 +6,7 @@ from goods.models import Goods
 from goods.serializers import GoodsSerializer
 from trade.models import ShoppingCart, OrderGoods, OrderInfo
 from utils.alipay import AliPay
-from vue_django_test.settings import private_key_path, ali_pub_key_path
+from vue_django_test.settings import private_key_path, ali_pub_key_path, APP_ID
 
 
 class ShopCartDetailSerializer(serializers.ModelSerializer):
@@ -78,10 +78,31 @@ class OrderGoodsSerializer(serializers.ModelSerializer):
 
 class OrderDetailSerializer(serializers.ModelSerializer):
     goods = OrderGoodsSerializer(many=True)
-    alipay = ''
+    alipay_url = serializers.SerializerMethodField(read_only=True)
+
 
     def get_alipay_url(self, obj):
-        raise NotImplementedError('')
+        print('order detail serializer get alipay url')
+
+        alipay = AliPay(
+            appid=APP_ID,
+            app_notify_url="http://127.0.0.1:8000/alipay/return/",
+            app_private_key_path=private_key_path,
+            alipay_public_key_path=ali_pub_key_path,  # 支付宝的公钥，验证支付宝回传消息使用，不是你自己的公钥,
+            debug=True,  # 默认False,
+            return_url="http://127.0.0.1:8000/alipay/return/"
+        )
+
+        print('do direct pay')
+
+        url = alipay.direct_pay(
+            subject=obj.order_sn,
+            out_trade_no=obj.order_sn,
+            total_amount=obj.order_mount,
+        )
+        re_url = "https://openapi.alipaydev.com/gateway.do?{data}".format(data=url)
+
+        return re_url
 
     class Meta:
         model = OrderInfo
@@ -100,8 +121,9 @@ class OrderSerializer(serializers.ModelSerializer):
     alipay_url = serializers.SerializerMethodField(read_only=True)
 
     def get_alipay_url(self, obj):
+        print('order serializer get alipay url')
         alipay = AliPay(
-            appid="",
+            appid=APP_ID,
             app_notify_url="http://127.0.0.1:8000/alipay/return/",
             app_private_key_path=private_key_path,
             alipay_public_key_path=ali_pub_key_path,  # 支付宝的公钥，验证支付宝回传消息使用，不是你自己的公钥,
@@ -115,6 +137,7 @@ class OrderSerializer(serializers.ModelSerializer):
             total_amount=obj.order_mount,
         )
         re_url = "https://openapi.alipaydev.com/gateway.do?{data}".format(data=url)
+        print('return url   {}'.format(re_url))
 
         return re_url
 

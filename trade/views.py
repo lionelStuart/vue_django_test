@@ -1,16 +1,21 @@
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 
 # Create your views here.
 from rest_framework import viewsets, mixins
+from rest_framework.response import Response
 from rest_framework.views import APIView
 
 from rest_framework.authentication import SessionAuthentication
 from rest_framework.permissions import IsAuthenticated
 from rest_framework_jwt.authentication import JSONWebTokenAuthentication
 
+from utils.alipay import AliPay
+from vue_django_test.settings import private_key_path, ali_pub_key_path, APP_ID
 from .models import ShoppingCart, OrderInfo, OrderGoods
 from .serializers import ShoppingCartSerializer, ShopCartDetailSerializer, OrderSerializer, OrderDetailSerializer
 from utils.permissions import IsOwnerOrReadOnly
+
+from datetime import datetime
 
 
 class ShoppingCartViewset(viewsets.ModelViewSet):
@@ -97,7 +102,7 @@ class OrderViewset(mixins.ListModelMixin,
 
     def get_serializer_class(self):
         print('oreder view action {}'.format(self.action))
-        if self.action == 'retrive':
+        if self.action == 'retrieve':
             return OrderDetailSerializer
         return OrderSerializer
 
@@ -125,4 +130,79 @@ class AliPayView(APIView):
     alipay-...
     """
 
-    pass
+    def get(self, request):
+        print('api view get func')
+        processed_dict = {}
+        for key, value in request.GET.items():
+            processed_dict[key] = value
+
+        sign = processed_dict['sign', None]
+
+        alipay = AliPay(
+            appid=APP_ID,
+            app_notify_url="http://127.0.0.1:8000/alipay/return/",
+            app_private_key_path=private_key_path,
+            alipay_public_key_path=ali_pub_key_path,
+            debug=True,
+            return_url="http://127.0.0.1:8000/alipay/return/"
+        )
+
+        verify_re = alipay.verify(processed_dict, sign)
+
+        if verify_re is True:
+            order_sn = processed_dict.get('out_trade_no', None)
+            trade_no = processed_dict.get('trade_no', None)
+            trade_status = processed_dict.get('trade_status', None)
+
+            existed_orders = OrderInfo.objects.filter(order_sn=order_sn)
+            for existed_order in existed_orders:
+                existed_order.pay_status = trade_status
+                existed_order.trade_no = trade_no
+                existed_order.pay_time = datetime.now()
+                existed_order.save()
+
+            response = redirect('index')
+            response.set_cookie('nextPath', 'pay', max_age=3),
+            return response
+        else:
+            response = redirect('index')
+            return response
+
+        def post(self, request):
+            print('api post func')
+            processed_dict = dict()
+            for key, value in request.POST.items():
+                processed_dict[key] = value
+
+            sign = processed_dict.pop('sign', None)
+
+            alipay = AliPay(
+                appid=APP_ID,
+                app_notify_url='http://127.0.0.1:8000/alipay/return',
+                app_private_key_path=private_key_path,
+                alipay_public_key_path=ali_pub_key_path,
+                debug=True,
+                return_url='http://127.0.0.1:8000/alipay/return'
+            )
+
+            verify_re = alipay.verify(processed_dict, sign)
+
+            if verify_re is True:
+                order_sn = processed_dict.get('out_trade_no', None)
+                trade_no = processed_dict.get('trade_no', None)
+                trade_status = processed_dict.get('trade_status', None)
+
+                existed_orders = OrderInfo.objects.filter(order_sn=order_sn)
+                for existed_order in existed_orders:
+                    order_goods = existed_order.goods.all()
+                    for order_good in order_goods:
+                        goods = order_good.goods
+                        goods.sold_num += order_good.goods_num
+                        goods.save()
+
+                    existed_order.pay_status = trade_status
+                    existed_order.trade_no = trade_no
+                    existed_order.pay_time = datetime.now()
+                    existed_order.save()
+
+                return Response('success')
