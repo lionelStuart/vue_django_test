@@ -135,8 +135,8 @@ class AliPayView(APIView):
         processed_dict = {}
         for key, value in request.GET.items():
             processed_dict[key] = value
-
-        sign = processed_dict['sign', None]
+        print('return from alipay {}'.format(processed_dict))
+        sign = processed_dict.pop("sign", None)
 
         alipay = AliPay(
             appid=APP_ID,
@@ -152,7 +152,7 @@ class AliPayView(APIView):
         if verify_re is True:
             order_sn = processed_dict.get('out_trade_no', None)
             trade_no = processed_dict.get('trade_no', None)
-            trade_status = processed_dict.get('trade_status', None)
+            trade_status = processed_dict.get('trade_status', 'TRADE_SUCCESS')
 
             existed_orders = OrderInfo.objects.filter(order_sn=order_sn)
             for existed_order in existed_orders:

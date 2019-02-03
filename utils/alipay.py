@@ -110,6 +110,7 @@ class AliPay(object):
 
     def sign(self, unsigned_string):
         # 开始计算签名
+        print('do sign {}'.format(unsigned_string))
         key = self.app_private_key
         signer = PKCS1_v1_5.new(key)
         signature = signer.sign(SHA256.new(unsigned_string))
@@ -126,7 +127,8 @@ class AliPay(object):
         if signer.verify(digest, decodebytes(signature.encode("utf8"))):
             print("_vertify success")
             return True
-        print("_vertify failure")
+        print('sign {}'.format(signature))
+        print("_vertify failure:    {}##{}".format(raw_content,signature))
         return False
 
     def verify(self, data, signature):
@@ -144,6 +146,8 @@ if __name__ == "__main__":
     query = parse_qs(o.query)
     processed_query = {}
     ali_sign = query.pop("sign")[0]
+    print('url return {}'.format(return_url))
+    print('ali_sign '.format(ali_sign))
 
     alipay = AliPay(
         appid=APP_ID,
@@ -156,6 +160,7 @@ if __name__ == "__main__":
 
     for key, value in query.items():
         processed_query[key] = value[0]
+    print('before vertify   {}'.format(processed_query))
     print(alipay.verify(processed_query, ali_sign))
 
     url = alipay.direct_pay(

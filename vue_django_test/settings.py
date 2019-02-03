@@ -182,4 +182,7 @@ private_key_path = os.path.join(BASE_DIR, 'trade/keys/private_2048.txt')
 ali_pub_key_path = os.path.join(BASE_DIR, 'trade/keys/alipay_key_2048.txt')
 
 #APP_ID = '2016092300581122'
-APP_ID = '2016091500517456'
+#APP_ID = '2016091500517456'
+APP_ID = '2016080600180695'
+
+
